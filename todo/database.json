@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "driver": "pg",
+        "user": "todos",
+        "password": "todos",
+        "host": "localhost",
+        "database": "todos",
+        "schema": "todos"
+      }
+}
