@@ -6,7 +6,7 @@ var Sequelize=require('sequelize');
   ORM
 */
 var sequelize=new Sequelize('todos', 'todos', 'todos',{
-   host:'lpmpa-des15.procempa.com.br',
+   host:'localhost',
    dialect:'postgres'});
 
 var Todo= sequelize.define('todos', {
