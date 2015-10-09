@@ -1,25 +1,31 @@
 function TodoCtrl($scope, $http) {
-  
+
   $scope.todos = [];
 
+  //var BASE_HREF = 'http://localhost:8001/todo'; //acessando a api Node
+  var BASE_HREF = 'http://lpmpa-des16.procempa.com.br:8080/todo/rest/todo'; //acessando a api Java
+
+  function leTodos() {
     $http({
-        url: 'http://localhost:8001/todos',
+        url: BASE_HREF,
         method : 'GET'
     })
     .then(function(res) {
-        $scope.todos=res.data;
+      $scope.todos = res.data;
     }, function(err) {
         var retorno = err.data.message || err.statusText || "sem comunicação com o serviço";
         alert(retorno);
     });
-    
+  }
+  leTodos();
+
   $scope.getTotalTodos = function () {
-    return $scope.todos.length;
+    return $scope.todos ? $scope.todos.length : 0;
   };
-  
+
   $scope.toogle = function (todo){
     $http({
-        url: 'http://localhost:8001/todos/' + todo.id,
+        url: BASE_HREF + '/' + todo.id,
         method : 'PUT',
         data: todo
     })
@@ -28,13 +34,14 @@ function TodoCtrl($scope, $http) {
     }, function(err) {
         var retorno = err.data.message || err.statusText || "sem comunicação com o serviço";
         alert(retorno);
+        leTodos();
     });
   }
-  
+
   $scope.addTodo = function () {
     var todo={text:$scope.formTodoText, done:false};
     $http({
-        url: 'http://localhost:8001/todos',
+        url: BASE_HREF,
         method : 'POST',
         data: todo
     })
@@ -44,25 +51,16 @@ function TodoCtrl($scope, $http) {
         var retorno = err.data.message || err.statusText || "sem comunicação com o serviço";
         alert(retorno);
     });
-      
+
     $scope.formTodoText = '';
   };
-  
+
     $scope.clearCompleted = function () {
         _.filter($scope.todos, function(todo){
             if (todo.done){
-                $http.delete('http://localhost:8001/todos/' + todo.id)
+                $http.delete(BASE_HREF + '/' + todo.id)
                 .then(function(res) {
-                    $http({
-                        url: 'http://localhost:8001/todos',
-                        method : 'GET'
-                    })
-                    .then(function(res) {
-                        $scope.todos=res.data;
-                    }, function(err) {
-                        var retorno = err.data.message || err.statusText || "sem comunicação com o serviço";
-                        alert(retorno);
-                    });
+                  leTodos();
                 }, function(err) {
                     var retorno = err.data.message || err.statusText || "sem comunicação com o serviço";
                     alert(retorno);

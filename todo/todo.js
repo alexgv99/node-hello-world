@@ -1,15 +1,16 @@
 var restify=require('restify');
-var pg=require('pg').native;
+var pg=require('pg');
 var Sequelize=require('sequelize');
 
 /**
   ORM
 */
-var sequelize=new Sequelize('todos', 'todos', 'todos',{
-   host:'localhost',
+var sequelize=new Sequelize('todos', 'todouser', 'todopass',{
+   host:'lpmpa-des15.procempa.com.br',
+   port: 32775,
    dialect:'postgres'});
 
-var Todo= sequelize.define('todos', {
+var Todo= sequelize.define('todo', {
   id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
   text: Sequelize.STRING,
   done: Sequelize.BOOLEAN
@@ -36,7 +37,7 @@ server.use(restify.bodyParser());
 server.use(restify.CORS());
 
 //server.all('/todos', function(req, res, next){
-//    
+//
 //    res.header("Access-Control-Allow-Origin", "*");
 //    res.header("Access-Control-Allow-Headers", "X-Requested-With,Authorization,Origin");
 //    res.header("Origin", origin);
@@ -50,28 +51,28 @@ server.use(restify.CORS());
 //    response.header("Origin", origin);
 //});
 
-server.post('/todos', function(request, response, next){
+server.post('/todo', function(request, response, next){
   Todo
     .create(request.params)
-    .then(function(todo){response.redirect(302, '/todos/'+todo.id, next)},
+    .then(function(todo){response.redirect(302, '/todo/'+todo.id, next)},
           function(err){response.send(err);});
 });
 
-server.get('/todos', function(request, response, next){
+server.get('/todo', function(request, response, next){
   Todo
    .findAll()
    .then(function(data){response.send(data)},
          function(err){response.send(err)});
 });
 
-server.get('/todos/:id', function(request, response, next){
+server.get('/todo/:id', function(request, response, next){
   Todo
    .findById(request.params.id)
    .then(function(data){response.send(data)},
          function(err){response.send(err)});
 });
 
-server.put('/todos/:id', function(request, response, next){
+server.put('/todo/:id', function(request, response, next){
   Todo
    .findById(request.params.id)
    . then(function(todo){
@@ -83,7 +84,7 @@ server.put('/todos/:id', function(request, response, next){
          function(err){response.send(err)});
 });
 
-server.del('/todos/:id', function(request, response, next){
+server.del('/todo/:id', function(request, response, next){
   Todo
    .findById(request.params.id)
    . then(function(todo){
